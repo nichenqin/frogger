@@ -17,8 +17,8 @@ var Game = function () {
     this.MAX_TOP = 0;
     this.MAX_BOTTOM = this.BLOCK_HEIGTH * (this.CANVAS_ROW - 1);
 
-    this.MAX_SPEED = 4;
-    this.MIN_SPEED = 2;
+    this.MAX_SPEED = 300;
+    this.MIN_SPEED = 150;
 };
 
 /**
@@ -75,12 +75,12 @@ Enemy.prototype = Object.create(Game.prototype);
 Enemy.prototype.update = function (dt) {
     // 你应该给每一次的移动都乘以 dt 参数，以此来保证游戏在所有的电脑上
     // 都是以同样的速度运行的
-    if (this.x > game.MAX_RIGHT) {
-        this.x = game.MAX_LEFT;
+    if (this.x > game.MAX_RIGHT + game.IMAGE_WIDTH) {
+        this.x = game.MAX_LEFT - game.IMAGE_WIDTH;
         this.randomRow();
         this.randomSpeed();
     }
-    this.x += this.speed;
+    this.x += this.speed * dt;
 };
 
 /**
@@ -224,13 +224,6 @@ var Collections = function () {
 Collections.prototype = Object.create(Game.prototype);
 
 /**
- * 获取Collections位置
- * 规则与Player中获取位置的函数相同
- * @returns {String} 位置字符串
- */
-Collections.prototype.getCurrentBlock = Player.prototype.getCurrentBlock;
-
-/**
  * Collections更新函数
  */
 Collections.prototype.update = function () {
@@ -242,7 +235,7 @@ Collections.prototype.update = function () {
  * 就将钥匙放置到右上角
  */
 Collections.prototype.collected = function () {
-    if (this.getCurrentBlock() === player.getCurrentBlock()) {
+    if (player.getCurrentBlock.call(this) === player.getCurrentBlock()) {
         key.randomPos(5, 4, 1, 0);
     }
 };
