@@ -79,6 +79,8 @@ var Engine = (function (global) {
         });
 
         player.update();
+
+        key.update();
     }
 
     /* 这个函数做了一些游戏的初始渲染，然后调用 renderEntities 函数。记住，这个函数
@@ -118,7 +120,7 @@ var Engine = (function (global) {
      * 对象中定义的 render 方法。
      */
     function renderEntities() {
-        gem.render();
+        key.render();
         /* 遍历在 allEnemies 数组中存放的作于对象然后调用你事先定义的 render 函数 */
         allEnemies.forEach(function (enemy) {
             enemy.render();
@@ -151,7 +153,6 @@ var Engine = (function (global) {
         'images/char-boy.png',
         'images/Heart.png',
         'images/Selector.png',
-        'images/Gem Blue.png',
         'images/Key.png'
     ]);
     Resources.onReady(init);

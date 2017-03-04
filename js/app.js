@@ -192,6 +192,7 @@ Player.prototype.crash = function () {
  */
 Player.prototype.win = function () {
     this.init();
+    key = new Key();
 };
 
 /**
@@ -222,6 +223,42 @@ var Collections = function () {
 
 Collections.prototype = Object.create(Game.prototype);
 
+/**
+ * 获取Collections位置
+ * 
+ * @returns {String} 位置字符串
+ */
+Collections.prototype.getCurrentBlock = Player.prototype.getCurrentBlock;
+
+/**
+ * Collections更新函数
+ */
+Collections.prototype.update = function () {
+    this.collected();
+};
+
+/**
+ * 如果玩家和收集品在一个区域
+ * 就将要是放置到右上角
+ */
+Collections.prototype.collected = function () {
+    if (this.getCurrentBlock() === player.getCurrentBlock()) {
+        key.randomPos(5, 4, 1, 0);
+    }
+};
+
+
+/**
+ * Collections的子类
+ * 收集品：钥匙（key）
+ */
+var Key = function () {
+    Collections.call(this);
+    this.sprite = 'images/Key.png';
+};
+
+Key.prototype = Object.create(Collections.prototype);
+
 
 // 现在实例化你的所有对象
 // 把所有敌人的对象都放进一个叫 allEnemies 的数组里面
@@ -229,7 +266,7 @@ Collections.prototype = Object.create(Game.prototype);
 var allEnemies = [new Enemy(), new Enemy(), new Enemy()];
 var allHearts = [new Heart(1), new Heart(2), new Heart(3)];
 var player = new Player();
-var gem = new Collections();
+var key = new Key();
 
 // 这段代码监听游戏玩家的键盘点击事件并且代表将按键的关键数字送到 Play.handleInput()
 // 方法里面。你不需要再更改这段代码了。
