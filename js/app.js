@@ -6,14 +6,15 @@ var Game = function () {
     this.CANVAS_COL = 5;
     this.CANVAS_ROW = 6;
 
+    this.IMAGE_WIDTH = this.BLOCK_WIDTH;
     this.IMAGE_HEIGHT = 171;
 
     this.MAX_RIGHT = this.CANVAS_WIDTH - this.BLOCK_WIDTH;
     this.MAX_LEFT = 0;
-    this.MAX_TOP = this.BLOCK_HEIGTH;
+    this.MAX_TOP = 0;
     this.MAX_BOTTOM = this.BLOCK_HEIGTH * (this.CANVAS_ROW - 1);
 
-    this.MAX_SPEED = 5;
+    this.MAX_SPEED = 4;
     this.MIN_SPEED = 2;
 };
 
@@ -21,21 +22,29 @@ Game.prototype.render = function () {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+/**
+ * 获取当前所在位置
+ */
+Game.prototype.getCurrentBlock = function () {
+    return Math.floor((this.x) / game.BLOCK_WIDTH + 1) +
+        '-' +
+        (this.y + 20) / game.BLOCK_HEIGTH;
+};
+
 var game = new Game();
 
 console.log(game);
 
 // 这是我们的玩家要躲避的敌人 
-var Enemy = function (y) {
+var Enemy = function () {
     // 要应用到每个敌人的实例的变量写在这里
     // 我们已经提供了一个来帮助你实现更多
 
     // 敌人的图片或者雪碧图，用一个我们提供的工具函数来轻松的加载文件
     this.sprite = 'images/enemy-bug.png';
-    this.x = 0;
-    this.y = y * game.BLOCK_HEIGTH - 20;
-    this.speed = Math.random() * (game.MAX_SPEED - game.MIN_SPEED) + game.MIN_SPEED;
-    console.log(this);
+    this.y = this.randomRow();
+    this.speed = this.randomSpeed();
+    this.x = game.MAX_LEFT;
 };
 
 Enemy.prototype = Object.create(Game.prototype);
@@ -47,9 +56,22 @@ Enemy.prototype.update = function (dt) {
     // 都是以同样的速度运行的
     if (this.x > game.MAX_RIGHT) {
         this.x = game.MAX_LEFT;
-        this.speed = Math.random() * (game.MAX_SPEED - game.MIN_SPEED) + game.MIN_SPEED;
+        this.randomRow();
+        this.randomSpeed();
     }
     this.x += this.speed;
+};
+/**
+ * Enemy随机速度位置函数
+ */
+Enemy.prototype.randomSpeed = function () {
+    this.speed = Math.random() * (game.MAX_SPEED - game.MIN_SPEED) + game.MIN_SPEED;
+    return this.speed;
+};
+
+Enemy.prototype.randomRow = function () {
+    this.y = (Math.floor(Math.random() * 3 + 1)) * game.BLOCK_HEIGTH - 20;
+    return this.y;
 };
 
 // 现在实现你自己的玩家类
@@ -57,20 +79,23 @@ Enemy.prototype.update = function (dt) {
 var Player = function () {
     this.sprite = 'images/char-boy.png';
     this.x = game.BLOCK_WIDTH * 2;
-    this.y = game.BLOCK_HEIGTH * 5 - (game.IMAGE_HEIGHT - game.BLOCK_HEIGTH);
+    this.y = game.BLOCK_HEIGTH * 5 - 20;
+    this.winSprite = 'images/Selector.png';
+    this.col = this.x / game.BLOCK_WIDTH;
 };
 
 Player.prototype = Object.create(Game.prototype);
 
 Player.prototype.update = function () {
+    this.crash();
     if (this.x > game.MAX_RIGHT) {
         this.x = game.MAX_RIGHT;
     } else if (this.x < game.MAX_LEFT) {
         this.x = game.MAX_LEFT;
-    } else if (this.y > game.MAX_BOTTOM) {
-        this.y = game.MAX_BOTTOM;
+    } else if (this.y > game.MAX_BOTTOM - 20) {
+        this.y = game.MAX_BOTTOM - 20;
     } else if (this.y < game.MAX_TOP) {
-        this.y = game.MAX_TOP;
+        this.win();
     }
 };
 
@@ -97,10 +122,38 @@ Player.prototype.handleInput = function (key) {
             break;
     }
 };
+
+/**
+ * player与enemy的碰撞函数
+ */
+Player.prototype.crash = function () {
+    var self = this;
+    allEnemies.forEach(function (enemy) {
+        if (self.getCurrentBlock() === enemy.getCurrentBlock()) {
+            self.win();
+        }
+    });
+};
+
+/**
+ * player获胜函数
+ */
+Player.prototype.win = function () {
+    ctx.drawImage(this.winSprite, this.x, this.y);
+    player = new Player();
+};
+
+/**
+ * player失败函数
+ */
+Player.prototype.lose = function () {
+    player = new Player();
+};
+
 // 现在实例化你的所有对象
 // 把所有敌人的对象都放进一个叫 allEnemies 的数组里面
 // 把玩家对象放进一个叫 player 的变量里面
-var allEnemies = [new Enemy(1), new Enemy(2), new Enemy(3)];
+var allEnemies = [new Enemy(), new Enemy(), new Enemy()];
 var player = new Player();
 
 console.log(allEnemies[0]);
@@ -118,4 +171,5 @@ document.addEventListener('keyup', function (e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
     console.log(player.x, player.y);
+    console.log(player.getCurrentBlock());
 });
