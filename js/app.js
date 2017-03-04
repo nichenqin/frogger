@@ -225,7 +225,7 @@ Collections.prototype = Object.create(Game.prototype);
 
 /**
  * 获取Collections位置
- * 
+ * 规则与Player中获取位置的函数相同
  * @returns {String} 位置字符串
  */
 Collections.prototype.getCurrentBlock = Player.prototype.getCurrentBlock;
@@ -239,7 +239,7 @@ Collections.prototype.update = function () {
 
 /**
  * 如果玩家和收集品在一个区域
- * 就将要是放置到右上角
+ * 就将钥匙放置到右上角
  */
 Collections.prototype.collected = function () {
     if (this.getCurrentBlock() === player.getCurrentBlock()) {
@@ -267,6 +267,7 @@ var allEnemies = [new Enemy(), new Enemy(), new Enemy()];
 var allHearts = [new Heart(1), new Heart(2), new Heart(3)];
 var player = new Player();
 var key = new Key();
+console.log(key);
 
 // 这段代码监听游戏玩家的键盘点击事件并且代表将按键的关键数字送到 Play.handleInput()
 // 方法里面。你不需要再更改这段代码了。
