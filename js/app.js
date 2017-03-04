@@ -1,3 +1,6 @@
+/**
+ * 公用变量及函数
+ */
 var Game = function () {
     this.BLOCK_WIDTH = 101;
     this.BLOCK_HEIGTH = 83;
@@ -18,22 +21,40 @@ var Game = function () {
     this.MIN_SPEED = 2;
 };
 
+/**
+ * Game初始化
+ */
+Game.prototype.init = function () {
+    player = new Player();
+    allHearts = [new Heart(1), new Heart(2), new Heart(3)];
+    allHearts.forEach(function (heart) {
+        heart.render();
+    });
+};
+
+/**
+ * 渲染函数
+ * 将游戏内需要的元素绘制到canvas中
+ */
 Game.prototype.render = function () {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+
 /**
- * 获取当前所在位置
+ * 设置玩家、敌人或收藏物品的随机位置
+ * 
+ * @param {any} maxCol 最大行数
+ * @param {any} minCol 最小行数
+ * @param {any} maxRow 最大列数
+ * @param {any} minRow 最小列数
  */
-Game.prototype.getCurrentBlock = function () {
-    return Math.floor((this.x) / game.BLOCK_WIDTH + 1) +
-        '-' +
-        (this.y + 20) / game.BLOCK_HEIGTH;
+Game.prototype.randomPos = function (maxCol, minCol, maxRow, minRow) {
+    this.x = (Math.floor(Math.random() * (maxCol - minCol) + minCol) * game.BLOCK_WIDTH);
+    this.y = (Math.floor(Math.random() * (maxRow - minRow) + minRow)) * game.BLOCK_HEIGTH - 20;
 };
 
 var game = new Game();
-
-console.log(game);
 
 // 这是我们的玩家要躲避的敌人 
 var Enemy = function () {
@@ -42,8 +63,8 @@ var Enemy = function () {
 
     // 敌人的图片或者雪碧图，用一个我们提供的工具函数来轻松的加载文件
     this.sprite = 'images/enemy-bug.png';
-    this.y = this.randomRow();
-    this.speed = this.randomSpeed();
+    this.randomRow();
+    this.randomSpeed();
     this.x = game.MAX_LEFT;
 };
 
@@ -61,31 +82,42 @@ Enemy.prototype.update = function (dt) {
     }
     this.x += this.speed;
 };
+
+/**
+ * 获取Enemy当前位置
+ */
+Enemy.prototype.getCurrentBlock = function () {
+    return Math.floor((this.x + game.IMAGE_WIDTH - 30) / game.BLOCK_WIDTH + 1) +
+        '-' +
+        (this.y + 20) / game.BLOCK_HEIGTH;
+};
+
 /**
  * Enemy随机速度位置函数
  */
 Enemy.prototype.randomSpeed = function () {
     this.speed = Math.random() * (game.MAX_SPEED - game.MIN_SPEED) + game.MIN_SPEED;
-    return this.speed;
 };
 
 Enemy.prototype.randomRow = function () {
     this.y = (Math.floor(Math.random() * 3 + 1)) * game.BLOCK_HEIGTH - 20;
-    return this.y;
 };
 
 // 现在实现你自己的玩家类
 // 这个类需要一个 update() 函数， render() 函数和一个 handleInput()函数
 var Player = function () {
     this.sprite = 'images/char-boy.png';
-    this.x = game.BLOCK_WIDTH * 2;
-    this.y = game.BLOCK_HEIGTH * 5 - 20;
-    this.winSprite = 'images/Selector.png';
+    this.randomPos(6, 1, 6, 4);
     this.col = this.x / game.BLOCK_WIDTH;
+    this.hearts = 3;
 };
 
 Player.prototype = Object.create(Game.prototype);
 
+
+/**
+ * 更新玩家的位置
+ */
 Player.prototype.update = function () {
     this.crash();
     if (this.x > game.MAX_RIGHT) {
@@ -97,6 +129,15 @@ Player.prototype.update = function () {
     } else if (this.y < game.MAX_TOP) {
         this.win();
     }
+};
+
+/**
+ * 获取玩家当前所在位置
+ */
+Player.prototype.getCurrentBlock = function () {
+    return Math.floor((this.x) / game.BLOCK_WIDTH + 1) +
+        '-' +
+        (this.y + 20) / game.BLOCK_HEIGTH;
 };
 
 /**
@@ -130,7 +171,18 @@ Player.prototype.crash = function () {
     var self = this;
     allEnemies.forEach(function (enemy) {
         if (self.getCurrentBlock() === enemy.getCurrentBlock()) {
-            self.win();
+            self.hearts--;
+            if (self.hearts === 0) {
+                self.hearts = 3;
+                self.lose();
+            } else {
+                self.randomPos(6, 1, 6, 4);
+
+                allHearts.splice(-1, 1);
+                allHearts.forEach(function (heart) {
+                    heart.render();
+                });
+            }
         }
     });
 };
@@ -139,25 +191,45 @@ Player.prototype.crash = function () {
  * player获胜函数
  */
 Player.prototype.win = function () {
-    ctx.drawImage(this.winSprite, this.x, this.y);
-    player = new Player();
+    this.init();
 };
 
 /**
  * player失败函数
  */
 Player.prototype.lose = function () {
-    player = new Player();
+    console.log('lose');
 };
+
+/**
+ * Heart对象，对应Player的heart变量
+ * 使用Game对象的render方法绘制到canvas上
+ */
+var Heart = function (x) {
+    this.sprite = 'images/Heart.png';
+    this.x = (x - 1) * game.BLOCK_WIDTH;
+    this.y = 0;
+};
+
+Heart.prototype = Object.create(Game.prototype);
+
+/**
+ * Collections收集要素
+ */
+var Collections = function () {
+    this.randomPos(5, 0, 4, 1);
+};
+
+Collections.prototype = Object.create(Game.prototype);
+
 
 // 现在实例化你的所有对象
 // 把所有敌人的对象都放进一个叫 allEnemies 的数组里面
 // 把玩家对象放进一个叫 player 的变量里面
 var allEnemies = [new Enemy(), new Enemy(), new Enemy()];
+var allHearts = [new Heart(1), new Heart(2), new Heart(3)];
 var player = new Player();
-
-console.log(allEnemies[0]);
-console.log(player);
+var gem = new Collections();
 
 // 这段代码监听游戏玩家的键盘点击事件并且代表将按键的关键数字送到 Play.handleInput()
 // 方法里面。你不需要再更改这段代码了。
@@ -170,6 +242,6 @@ document.addEventListener('keyup', function (e) {
     };
 
     player.handleInput(allowedKeys[e.keyCode]);
-    console.log(player.x, player.y);
-    console.log(player.getCurrentBlock());
 });
+
+// DOM操作

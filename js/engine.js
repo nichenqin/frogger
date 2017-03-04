@@ -54,9 +54,9 @@ var Engine = (function (global) {
      * 做一次就够了
      */
     function init() {
-        reset();
         lastTime = Date.now();
         main();
+        reset();
     }
 
     /* 这个函数被 main 函数（我们的游戏主循环）调用，它本身调用所有的需要更新游戏角色
@@ -77,6 +77,7 @@ var Engine = (function (global) {
         allEnemies.forEach(function (enemy) {
             enemy.update(dt);
         });
+
         player.update();
     }
 
@@ -117,12 +118,18 @@ var Engine = (function (global) {
      * 对象中定义的 render 方法。
      */
     function renderEntities() {
+        gem.render();
         /* 遍历在 allEnemies 数组中存放的作于对象然后调用你事先定义的 render 函数 */
         allEnemies.forEach(function (enemy) {
             enemy.render();
         });
 
+        allHearts.forEach(function (heart) {
+            heart.render();
+        });
+
         player.render();
+
     }
 
     /* 这个函数现在没干任何事，但是这会是一个好地方让你来处理游戏重置的逻辑。可能是一个
@@ -130,7 +137,7 @@ var Engine = (function (global) {
      * 函数调用一次。
      */
     function reset() {
-        // 空操作
+        // 空操作   
     }
 
     /* 紧接着我们来加载我们知道的需要来绘制我们游戏关卡的图片。然后把 init 方法设置为回调函数。
@@ -141,7 +148,11 @@ var Engine = (function (global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-boy.png',
+        'images/Heart.png',
+        'images/Selector.png',
+        'images/Gem Blue.png',
+        'images/Key.png'
     ]);
     Resources.onReady(init);
 
