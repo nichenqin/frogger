@@ -7,7 +7,8 @@
 - 你有3颗心作为初始生命值
 ![生命值](https://raw.githubusercontent.com/nichenqin1001/udacity_Frogger/master/images/Heart.png)
 - 重置按钮：按下重置按钮后就重新设置
-***
+
+
 ## 目标
 - 收集钥匙
 ![钥匙](https://raw.githubusercontent.com/nichenqin1001/udacity_Frogger/master/images/Key.png)
