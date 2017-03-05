@@ -292,6 +292,10 @@ Score.prototype.render = function () {
  * 获胜后的灯光
  */
 var Trophy = function () {
+<<<<<<< HEAD
+=======
+    Player.call(this);
+>>>>>>> 2b279963a5c7f7c6c00bf34b4beeeb8f413dece0
     this.sprite = 'images/Selector.png';
     this.x = player.x;
     this.y = player.y;
