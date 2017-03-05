@@ -19,11 +19,15 @@ var Engine = (function (global) {
         win = global.window,
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
+        button = doc.createElement('button'),
+        txt = doc.createTextNode('重置'),
         lastTime;
 
     canvas.width = 505;
     canvas.height = 606;
     doc.body.appendChild(canvas);
+    doc.body.appendChild(button);
+    button.appendChild(txt);
 
     /* 这个函数是整个游戏的主入口，负责适当的调用 update / render 函数 */
     function main() {
@@ -54,9 +58,9 @@ var Engine = (function (global) {
      * 做一次就够了
      */
     function init() {
+        reset();
         lastTime = Date.now();
         main();
-        reset();
     }
 
     /* 这个函数被 main 函数（我们的游戏主循环）调用，它本身调用所有的需要更新游戏角色
@@ -81,6 +85,10 @@ var Engine = (function (global) {
         player.update();
 
         key.update();
+
+        allStars.forEach(function (star) {
+            star.update();
+        });
     }
 
     /* 这个函数做了一些游戏的初始渲染，然后调用 renderEntities 函数。记住，这个函数
@@ -120,13 +128,19 @@ var Engine = (function (global) {
      * 对象中定义的 render 方法。
      */
     function renderEntities() {
-        key.render();
-        /* 遍历在 allEnemies 数组中存放的作于对象然后调用你事先定义的 render 函数 */
+
+        score.render();
 
         allHearts.forEach(function (heart) {
             heart.render();
         });
-        
+
+        key.render();
+
+        allStars.forEach(function (star) {
+            star.render();
+        });
+
         allEnemies.forEach(function (enemy) {
             enemy.render();
         });
@@ -140,7 +154,10 @@ var Engine = (function (global) {
      * 函数调用一次。
      */
     function reset() {
-        // 空操作   
+        // 空操作 
+        button.addEventListener('click', function () {
+            game.init();
+        });
     }
 
     /* 紧接着我们来加载我们知道的需要来绘制我们游戏关卡的图片。然后把 init 方法设置为回调函数。
@@ -154,7 +171,8 @@ var Engine = (function (global) {
         'images/char-boy.png',
         'images/Heart.png',
         'images/Selector.png',
-        'images/Key.png'
+        'images/Key.png',
+        'images/Star.png'
     ]);
     Resources.onReady(init);
 

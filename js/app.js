@@ -23,13 +23,14 @@ var Game = function () {
 
 /**
  * Game初始化
+ * 重新设置页面的要素
  */
 Game.prototype.init = function () {
     player = new Player();
     allHearts = [new Heart(1), new Heart(2), new Heart(3)];
-    allHearts.forEach(function (heart) {
-        heart.render();
-    });
+    key = new Key();
+    allStars = [new Star(), new Star(), new Star()];
+    score = new Score();
 };
 
 /**
@@ -166,22 +167,22 @@ Player.prototype.handleInput = function (key) {
 
 /**
  * player与enemy的碰撞函数
+ * 当玩家与敌人相遇则扣一颗心
+ * 当hearts减为0时重设hearts，进入失败函数
+ * 否则将allhearts数组减一，重新渲染
  */
 Player.prototype.crash = function () {
     var self = this;
     allEnemies.forEach(function (enemy) {
         if (self.getCurrentBlock() === enemy.getCurrentBlock()) {
             self.hearts--;
+            score.score -= 20;
             if (self.hearts === 0) {
                 self.hearts = 3;
                 self.lose();
             } else {
                 self.randomPos(6, 1, 6, 4);
-
                 allHearts.splice(-1, 1);
-                allHearts.forEach(function (heart) {
-                    heart.render();
-                });
             }
         }
     });
@@ -192,7 +193,6 @@ Player.prototype.crash = function () {
  */
 Player.prototype.win = function () {
     this.init();
-    key = new Key();
 };
 
 /**
@@ -216,6 +216,8 @@ Heart.prototype = Object.create(Game.prototype);
 
 /**
  * Collections收集要素
+ * 在石头区域随机位置放置收集品
+ * 每一个子类都必须要有一个collected函数供update函数调用！
  */
 var Collections = function () {
     this.randomPos(5, 0, 4, 1);
@@ -231,17 +233,6 @@ Collections.prototype.update = function () {
 };
 
 /**
- * 如果玩家和收集品在一个区域
- * 就将钥匙放置到右上角
- */
-Collections.prototype.collected = function () {
-    if (player.getCurrentBlock.call(this) === player.getCurrentBlock()) {
-        key.randomPos(5, 4, 1, 0);
-    }
-};
-
-
-/**
  * Collections的子类
  * 收集品：钥匙（key）
  */
@@ -252,6 +243,49 @@ var Key = function () {
 
 Key.prototype = Object.create(Collections.prototype);
 
+Key.prototype.collected = function () {
+    if (player.getCurrentBlock.call(this) === player.getCurrentBlock()) {
+        key.randomPos(5, 4, 1, 0);
+        score.score += 100;
+    }
+    return true;
+};
+
+/**
+ * Collections的子类
+ * 收集品：钥匙（star）
+ */
+var Star = function () {
+    Collections.call(this);
+    this.sprite = 'images/Star.png';
+};
+
+Star.prototype = Object.create(Collections.prototype);
+
+Star.prototype.collected = function () {
+    if (player.getCurrentBlock.call(this) === player.getCurrentBlock()) {
+        this.randomPos(-1, -1, -1, -1);
+        score.score += 30;
+    }
+};
+
+
+var Score = function () {
+    this.score = 0;
+    this.x = 300;
+    this.y = 550;
+};
+
+Score.prototype = Object.create(Game.prototype);
+
+Score.prototype.render = function () {
+    ctx.font = '40px bold Comic Sans Serif';
+    ctx.fillStyle = 'white';
+    ctx.fillText('Score:' + this.score, this.x, this.y);
+    ctx.strockStyle = 'black';
+    ctx.strokeText('Score:' + this.score, this.x, this.y);
+};
+
 
 // 现在实例化你的所有对象
 // 把所有敌人的对象都放进一个叫 allEnemies 的数组里面
@@ -260,7 +294,8 @@ var allEnemies = [new Enemy(), new Enemy(), new Enemy()];
 var allHearts = [new Heart(1), new Heart(2), new Heart(3)];
 var player = new Player();
 var key = new Key();
-console.log(key);
+var allStars = [new Star(), new Star(), new Star()];
+var score = new Score();
 
 // 这段代码监听游戏玩家的键盘点击事件并且代表将按键的关键数字送到 Play.handleInput()
 // 方法里面。你不需要再更改这段代码了。
@@ -274,5 +309,3 @@ document.addEventListener('keyup', function (e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
-
-// DOM操作
