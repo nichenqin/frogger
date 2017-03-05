@@ -244,7 +244,7 @@ var Key = function () {
 Key.prototype = Object.create(Collections.prototype);
 
 Key.prototype.collected = function () {
-    if (player.getCurrentBlock.call(this) === player.getCurrentBlock()) {
+    if (Player.prototype.getCurrentBlock.call(this) === player.getCurrentBlock()) {
         key.randomPos(5, 4, 1, 0);
         score.score += 100;
     }
@@ -263,7 +263,7 @@ var Star = function () {
 Star.prototype = Object.create(Collections.prototype);
 
 Star.prototype.collected = function () {
-    if (player.getCurrentBlock.call(this) === player.getCurrentBlock()) {
+    if (Player.prototype.getCurrentBlock.call(this) === player.getCurrentBlock()) {
         this.randomPos(-1, -1, -1, -1);
         score.score += 30;
     }
