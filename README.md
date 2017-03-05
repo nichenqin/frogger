@@ -1,6 +1,38 @@
-前端纳米学位街机游戏项目
-===============================
+# 青蛙过河
 
-学生应该用这个[评审标准](https://review.udacity.com/#!/projects/2696458597/rubric)来自我检查自己提交的代码。 确认自己写的函数要是**面向对象的** -  要么是类函数（就像函数 Player 和 Enemy）要么是类的原型链上的函数比如 Enemy.prototype.checkCollisions ， 在类函数里面或者类的原型链函数里面适当的使用关键词 'this' 来引用调用该函数的对象实例。最后保证你的**readme.md**文件要写明关于如何运行和如何玩你的街机游戏的指引。
 
-关于如何开始这个项目的更详细的指导，可以查阅这一份[指南](https://docs.google.com/document/d/1v01aScPjSWCCWQLIpFqvg3-vXLH2e8_SZQKC8jNO0Dc/pub?embedded=true)
+## 如何开始
+- 这是我们的主人公![主人公](https://raw.githubusercontent.com/nichenqin1001/udacity_Frogger/master/images/char-boy.png)
+- 控制方向：键盘上下左右控制人物移动
+- 你有3颗心作为初始生命值
+![生命值](https://raw.githubusercontent.com/nichenqin1001/udacity_Frogger/master/images/Heart.png)
+- 重置按钮：按下重置按钮后就重新设置
+***
+## 目标
+- 收集钥匙
+![钥匙](https://raw.githubusercontent.com/nichenqin1001/udacity_Frogger/master/images/Key.png)
+
+    每收集一个钥匙获得*100分*
+
+- 收集星星
+![星星](https://raw.githubusercontent.com/nichenqin1001/udacity_Frogger/master/images/Star.png)
+
+    每收集一个星星获得*30分*
+
+- 避开敌人
+![敌人](https://raw.githubusercontent.com/nichenqin1001/udacity_Frogger/master/images/enemy-bug.png)
+
+    - 一个屏幕上最多同时会有三个敌人
+    - 敌人会随机出现在石块区域
+    - 每当你触碰到敌人时会减少一颗心，并回到岸上。如果你的心变为0，那么你就输掉了本局游戏。
+
+- 到达对岸！
+    
+    当你到达对岸时就获得了胜利！
+    尽量达到更高的分数吧！
+
+    ![对岸](https://raw.githubusercontent.com/nichenqin1001/udacity_Frogger/master/images/water-block.png)
+    ![对岸](https://raw.githubusercontent.com/nichenqin1001/udacity_Frogger/master/images/water-block.png)
+    ![对岸](https://raw.githubusercontent.com/nichenqin1001/udacity_Frogger/master/images/water-block.png)
+    ![对岸](https://raw.githubusercontent.com/nichenqin1001/udacity_Frogger/master/images/water-block.png)
+    ![对岸](https://raw.githubusercontent.com/nichenqin1001/udacity_Frogger/master/images/water-block.png)
