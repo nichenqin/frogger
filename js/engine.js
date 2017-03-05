@@ -145,7 +145,12 @@ var Engine = (function (global) {
             enemy.render();
         });
 
+        if (trophy) {
+            trophy.render();
+        }
+
         player.render();
+
 
     }
 
@@ -172,7 +177,8 @@ var Engine = (function (global) {
         'images/Heart.png',
         'images/Selector.png',
         'images/Key.png',
-        'images/Star.png'
+        'images/Star.png',
+        'images/Selector.png'
     ]);
     Resources.onReady(init);
 

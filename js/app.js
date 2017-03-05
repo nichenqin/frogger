@@ -31,6 +31,7 @@ Game.prototype.init = function () {
     key = new Key();
     allStars = [new Star(), new Star(), new Star()];
     score = new Score();
+    trophy = new Trophy();
 };
 
 /**
@@ -146,6 +147,7 @@ Player.prototype.getCurrentBlock = function () {
  * @param {any} key 按键
  */
 Player.prototype.handleInput = function (key) {
+    trophy = null;
     switch (key) {
         case 'left':
             this.x -= game.BLOCK_WIDTH;
@@ -286,6 +288,17 @@ Score.prototype.render = function () {
     ctx.strokeText('Score:' + this.score, this.x, this.y);
 };
 
+/**
+ * 获胜后的灯光
+ */
+var Trophy = function () {
+    Player.call(this);
+    this.sprite = 'images/Selector.png';
+    this.x = player.x;
+    this.y = player.y;
+};
+
+Trophy.prototype = Object.create(Game.prototype);
 
 // 现在实例化你的所有对象
 // 把所有敌人的对象都放进一个叫 allEnemies 的数组里面
@@ -296,7 +309,9 @@ var player = new Player();
 var key = new Key();
 var allStars = [new Star(), new Star(), new Star()];
 var score = new Score();
+var trophy;
 
+console.log(trophy);
 // 这段代码监听游戏玩家的键盘点击事件并且代表将按键的关键数字送到 Play.handleInput()
 // 方法里面。你不需要再更改这段代码了。
 document.addEventListener('keyup', function (e) {
