@@ -303,7 +303,7 @@ Trophy.prototype = Object.create(Game.prototype);
 // 现在实例化你的所有对象
 // 把所有敌人的对象都放进一个叫 allEnemies 的数组里面
 // 把玩家对象放进一个叫 player 的变量里面
-allEnemies = [new Enemy(), new Enemy(), new Enemy()];
+var allEnemies = [new Enemy(), new Enemy(), new Enemy()];
 game.init();
 
 console.log(trophy);
