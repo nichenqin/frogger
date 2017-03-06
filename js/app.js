@@ -26,6 +26,7 @@ var Game = function () {
  * 重新设置页面的要素
  */
 Game.prototype.init = function () {
+    allEnemies = [new Enemy(), new Enemy(), new Enemy()];
     player = new Player();
     allHearts = [new Heart(1), new Heart(2), new Heart(3)];
     key = new Key();
