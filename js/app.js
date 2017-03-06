@@ -26,7 +26,6 @@ var Game = function () {
  * 重新设置页面的要素
  */
 Game.prototype.init = function () {
-    allEnemies = [new Enemy(), new Enemy(), new Enemy()];
     player = new Player();
     allHearts = [new Heart(1), new Heart(2), new Heart(3)];
     key = new Key();
@@ -229,7 +228,7 @@ var Collections = function () {
 Collections.prototype = Object.create(Game.prototype);
 
 /**
- * Collections更新函数
+ * Collections更新函数，调用子类里的collected函数
  */
 Collections.prototype.update = function () {
     this.collected();
@@ -246,12 +245,16 @@ var Key = function () {
 
 Key.prototype = Object.create(Collections.prototype);
 
+/**
+ * 玩家遇到钥匙把钥匙放到右上角，然后加100分
+ * 
+ * @returns 
+ */
 Key.prototype.collected = function () {
     if (Player.prototype.getCurrentBlock.call(this) === player.getCurrentBlock()) {
         key.randomPos(5, 4, 1, 0);
         score.score += 100;
     }
-    return true;
 };
 
 /**
@@ -265,6 +268,10 @@ var Star = function () {
 
 Star.prototype = Object.create(Collections.prototype);
 
+/**
+ * 如果玩家收集到星星把星星放到画布外，然后加30分
+ * 
+ */
 Star.prototype.collected = function () {
     if (Player.prototype.getCurrentBlock.call(this) === player.getCurrentBlock()) {
         this.randomPos(-1, -1, -1, -1);
@@ -273,6 +280,10 @@ Star.prototype.collected = function () {
 };
 
 
+/**
+ * 玩家收集和遇敌时的分数
+ * 
+ */
 var Score = function () {
     this.score = 0;
     this.x = 300;
@@ -294,6 +305,7 @@ Score.prototype.render = function () {
  */
 var Trophy = function () {
     this.sprite = 'images/Selector.png';
+    // 灯光位置同玩家在同一区块
     this.x = player.x;
     this.y = player.y;
 };
@@ -304,7 +316,10 @@ Trophy.prototype = Object.create(Game.prototype);
 // 把所有敌人的对象都放进一个叫 allEnemies 的数组里面
 // 把玩家对象放进一个叫 player 的变量里面
 var allEnemies = [new Enemy(), new Enemy(), new Enemy()];
+//建立所有实例
 game.init();
+//第一次不显示出主角身后的灯光
+trophy = null;
 
 console.log(trophy);
 // 这段代码监听游戏玩家的键盘点击事件并且代表将按键的关键数字送到 Play.handleInput()
