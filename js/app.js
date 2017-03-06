@@ -302,13 +302,8 @@ Trophy.prototype = Object.create(Game.prototype);
 // 现在实例化你的所有对象
 // 把所有敌人的对象都放进一个叫 allEnemies 的数组里面
 // 把玩家对象放进一个叫 player 的变量里面
-var allEnemies = [new Enemy(), new Enemy(), new Enemy()];
-var allHearts = [new Heart(1), new Heart(2), new Heart(3)];
-var player = new Player();
-var key = new Key();
-var allStars = [new Star(), new Star(), new Star()];
-var score = new Score();
-var trophy;
+allEnemies = [new Enemy(), new Enemy(), new Enemy()];
+game.init();
 
 console.log(trophy);
 // 这段代码监听游戏玩家的键盘点击事件并且代表将按键的关键数字送到 Play.handleInput()
